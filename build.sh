@@ -36,7 +36,7 @@ sudo docker run -it --name hardhat --network=host docker-hardhat
 read -p "Create one new image with Docker/NodeJS/HardHat ? y/n " choice
 if [ $choice == "y" ]; then
   read -p "You already have Docker installed? y/n " choice
-  if [ $choice == "y" ]; then
+  if [ $choice == "n" ]; then
   install_docker
   fi
   read -p "What the name of your image? " choice
@@ -45,7 +45,7 @@ if [ $choice == "y" ]; then
   docker images
 else
   read -p "You already have Docker installed? y/n " choice
-  if [ $choice == "y" ]; then
+  if [ $choice == "n" ]; then
   install_docker
   fi
 dockerfile
