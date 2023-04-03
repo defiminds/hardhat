@@ -21,16 +21,16 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
 # Instalar o hardhat
 RUN npm install -g hardhat
 # Configurando hardhat para zksync e mumbai testnet
-RUN hardhat config --network zksync && \
-    hardhat config --network polygonmumbaitestnet && \
-    npm install @ethersproject/networks --save-dev && \
-    npm install @zksync/contracts@^0.4.0 && \
-    npm install --save-dev @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle chai @nomiclabs/hardhat-etherscan hardhat-gas-reporter && \
-    npm install @ethersproject/networks --save-dev
+#RUN hardhat config --network zksync && \
+#    hardhat config --network polygonmumbaitestnet && \
+#    npm install @ethersproject/networks --save-dev && \
+#    npm install @zksync/contracts@^0.4.0 && \
+#    npm install --save-dev @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle chai @nomiclabs/hardhat-etherscan hardhat-gas-reporter && \
+#    npm install @ethersproject/networks --save-dev
 # Definir o diretório de trabalho
 WORKDIR /app" > Dockerfile
-sudo docker build -t docker-hardhat .
-sudo docker run -it --name hardhat --network=host docker-hardhat
+sudo docker build -t ${image} .
+sudo docker run -it --name hardhat --network=host ${image}
 }
 
 read -p "Create one new image with Docker/NodeJS/HardHat ? y/n " choice
@@ -40,7 +40,7 @@ if [ $choice == "y" ]; then
   install_docker
   fi
   read -p "What the name of your image? " choice
-  mkdir $choice && cd ./$choice && dockerfile
+  mkdir $choice && cd ./$choice &&  image="${choice}" && dockerfile
   docker build -t $choice .
   docker images
 else
