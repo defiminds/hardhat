@@ -7,7 +7,8 @@ then after make the image, the script start one container with npx,npm,hardhat
 latest version installed  To compile and build your projects or interact with others  
 
 Create one secure container to use with defiminds/hardhat image to docker with this command:  
-```docker run -d --name meu-container --network rede-separada \  
+```  
+docker run -d --name meu-container --network rede-separada \   
 --publish 80:80 --publish 443:443 \  
 --publish 8545:8545 --publish 30303:30303 \  
 --publish 7545:7545 --publish 8546:8546 \  
