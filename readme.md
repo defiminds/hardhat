@@ -53,4 +53,6 @@ docker run -d --name meu-container --network rede-separada \
 --publish 3108:3108 --publish 3109:3109 \  
 --publish 3110:3110 --publish 3111:3111 \  
 --pids-limit 100 \  
---cap-drop ALL \```
+--cap-drop ALL \  
+defiminds/hardhat  
+```
