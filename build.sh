@@ -10,25 +10,45 @@ sudo apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.i
 }
 
 dockerfile() {
-echo -ne -n -e "# Usar uma imagem base do Ubuntu
-FROM ubuntu:latest
-# Atualizar a lista de pacotes e instalar o curl
-RUN apt-get update && apt-get install -y curl
+echo -ne -n -e "# Usar uma imagem base mínima e atualizada do Ubuntu
+FROM ubuntu:20.04
+
+# Atualizar a lista de pacotes e instalar o curl com suporte HTTPS
+RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get install -y gnupg && \
+    apt-get install -y ca-certificates && \
+    apt-get install -y apt-transport-https && \
+    rm -rf /var/lib/apt/lists/*
+
+# Adicionar chaves de repositório do Node.js e adicionar fontes de pacote
+RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
+
 # Instalar o Node.js e o npm
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+RUN apt-get update && \
     apt-get install -y nodejs && \
-    npm install -g npm
+    npm install -g npm && \
+    rm -rf /var/lib/apt/lists/*
+
 # Instalar o hardhat
 RUN npm install -g hardhat
+
 # Configurando hardhat para zksync e mumbai testnet
-#RUN hardhat config --network zksync && \
-#    hardhat config --network polygonmumbaitestnet && \
-#    npm install @ethersproject/networks --save-dev && \
-#    npm install @zksync/contracts@^0.4.0 && \
-#    npm install --save-dev @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle chai @nomiclabs/hardhat-etherscan hardhat-gas-reporter && \
-#    npm install @ethersproject/networks --save-dev
+RUN npm install --save-dev @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle @nomiclabs/hardhat-etherscan hardhat-gas-reporter
+
+# Crie um usuário não-root
+RUN groupadd -r hardhat && useradd -r -g hardhat hardhat
+USER hardhat
+
 # Definir o diretório de trabalho
-WORKDIR /app" > Dockerfile
+WORKDIR /app
+
+# Limite as permissões de arquivo
+RUN chmod 500 /app
+
+# Execute o contêiner em um ambiente isolado
+USER hardhat:nogroup
+ENTRYPOINT ["hardhat"]" > Dockerfile
 sudo docker build -t ${image} . --network=host
 sudo docker run -it --name hardhat --network=host ${image}
 }
