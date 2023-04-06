@@ -29,7 +29,7 @@ RUN npm install -g hardhat
 #    npm install @ethersproject/networks --save-dev
 # Definir o diretório de trabalho
 WORKDIR /app" > Dockerfile
-sudo docker build -t ${image} .
+sudo docker build -t ${image} . --network=host
 sudo docker run -it --name hardhat --network=host ${image}
 }
 
